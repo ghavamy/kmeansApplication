@@ -6,7 +6,8 @@ using UnityEngine;
 public class KmeansAlgorithm : MonoBehaviour
 {
     public GameObject dataPoint;
-    public GameObject panel;//for referencing main panel
+    public GameObject previousPanel;
+    public GameObject nextPanel;
     public int number_of_clusters = 3;
 
     private Color[] colors;
@@ -14,7 +15,8 @@ public class KmeansAlgorithm : MonoBehaviour
     {
         Accord.Math.Random.Generator.Seed = 0;
 
-        panel.SetActive(false);
+        nextPanel.SetActive(true);
+        previousPanel.SetActive(false);
         KMeans kmeans = new KMeans(number_of_clusters);
         var clusters = kmeans.Learn(TextScript.instance.textData);
         int[] label = clusters.Decide(TextScript.instance.textData);
