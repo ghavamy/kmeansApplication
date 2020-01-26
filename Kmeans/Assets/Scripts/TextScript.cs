@@ -20,13 +20,15 @@ public class TextScript : MonoBehaviour
         textData = new double[150][];
         string path = "Assets/iris.txt";
 
-        StreamReader reader = new StreamReader(path);
+        TextAsset txt = (TextAsset)Resources.Load("iris");
+        print(txt.text);
+        string[] lines = txt.text.Split('\n');
+        //StreamReader reader = new StreamReader(path);
 
         int i = 0;
-        string line;
-        while((line=reader.ReadLine())!= null)
-        {
-            if(!string.IsNullOrEmpty(line))
+        foreach(string line in lines) 
+        { 
+            if(!string.IsNullOrWhiteSpace(line))
             {
                 textData[i] = new double[4];
                 string[] param = line.Split(',');
@@ -38,6 +40,5 @@ public class TextScript : MonoBehaviour
                 i++;
             }
         }
-        reader.Close();
     }
 }
