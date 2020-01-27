@@ -18,7 +18,6 @@ public class TextScript : MonoBehaviour
     public void ReadFile()
     {
         textData = new double[150][];
-        string path = "Assets/iris.txt";
 
         TextAsset txt = (TextAsset)Resources.Load("iris");
         print(txt.text);

@@ -48,6 +48,6 @@ public class KmeansAlgorithm : MonoBehaviour
     }
     public void SetNumberOfClusters(string number)
     {
-            number_of_clusters = int.Parse(number);
+        number_of_clusters = int.Parse(number);
     }
 }
