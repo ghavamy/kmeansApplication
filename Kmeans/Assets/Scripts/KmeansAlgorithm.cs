@@ -5,24 +5,31 @@ using UnityEngine;
 
 public class KmeansAlgorithm : MonoBehaviour
 {
+    public static KmeansAlgorithm instance;
     public GameObject dataPoint;
-    public GameObject previousPanel;
-    public GameObject nextPanel;
     public int number_of_clusters = 3;
 
     private Color[] colors;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this);
+        }
+        instance = this;
+    }
     public void Clustering()
     {
         Accord.Math.Random.Generator.Seed = 0;
 
-        nextPanel.SetActive(true);
-        previousPanel.SetActive(false);
+        TextScript.instance.ReadFile();
         KMeans kmeans = new KMeans(number_of_clusters);
         var clusters = kmeans.Learn(TextScript.instance.textData);
         int[] label = clusters.Decide(TextScript.instance.textData);
 
         SetColors(number_of_clusters);
-        CreatePoints(label);
+        GeneratePoints(label);
     }
     private void SetColors(int k)
     {
@@ -35,19 +42,33 @@ public class KmeansAlgorithm : MonoBehaviour
             colors[i] = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         }
     }
-    private void CreatePoints(int[] label)
+    private void GeneratePoints(int[] label)
     {
+        RemovePoints();
+
         GameObject temp;
         Vector2 pos;
         for (int i = 0; i < 150; i++)
         {
-            pos = new Vector2((float)TextScript.instance.textData[i][0], (float)TextScript.instance.textData[i][1]);
+            pos = new Vector2((float)TextScript.instance.textData[i][AxisManagement.instance.horizontalIndex] - 2f,
+                (float)TextScript.instance.textData[i][AxisManagement.instance.verticalIndex] - 2f);
             temp = Instantiate(dataPoint, pos, Quaternion.identity) as GameObject;
             temp.GetComponent<SpriteRenderer>().material.color = colors[label[i]];
         }
     }
+    public void RemovePoints()
+    {
+        GameObject[] previousBall = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < previousBall.Length; i++)
+        {
+            Destroy(previousBall[i]);
+        }
+    }
     public void SetNumberOfClusters(string number)
     {
-        number_of_clusters = int.Parse(number);
+        if (!string.IsNullOrEmpty(number))
+        {
+            number_of_clusters = int.Parse(number);
+        }
     }
 }
